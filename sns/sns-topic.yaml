@@ -1,0 +1,38 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "SNS topic for config and pipeline messages"
+
+Resources:
+
+  ConfigTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: !Sub "config-topic-${AWS::AccountId}"
+      Subscription:
+        -
+          Endpoint:
+            Fn::ImportValue: config-01-dev-master-lambda-sns-slack::Functionarn
+          Protocol: lambda
+
+  PipelineTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: !Sub "pipeline-topic-${AWS::AccountId}"
+      Subscription:
+        -
+          Endpoint:
+            Fn::ImportValue: config-01-dev-master-lambda-sns-slack::Functionarn
+          Protocol: lambda
+
+Outputs:
+
+  ConfigTopic:
+    Value: !Ref ConfigTopic
+    Export:
+      Name: !Sub "${AWS::StackName}::ConfigTopic"
+
+  PipelineTopic:
+    Value: !Ref PipelineTopic
+    Export:
+      Name: !Sub "${AWS::StackName}::PipelineTopic"

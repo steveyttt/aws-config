@@ -1,0 +1,34 @@
+{
+    "version": "0",
+    "id": "f5f44e5d-7419-1049-7a50-c1eaa04e674f",
+    "detail-type": "Config Rules Compliance Change",
+    "source": "aws.config",
+    "account": "0000000000",
+    "time": "2018-12-15T13:12:55Z",
+    "region": "ap-southeast-2",
+    "resources": [],
+    "detail": {
+        "resourceId": "codepipelinebucket-0000000000",
+        "awsRegion": "ap-southeast-2",
+        "awsAccountId": "000000000",
+        "configRuleName": "s3-bucket-public-read-prohibited",
+        "recordVersion": "1.0",
+        "configRuleARN": "arn:aws:config:ap-southeast-2:00000000000:config-rule/config-rule-opv06u",
+        "messageType": "ComplianceChangeNotification",
+        "newEvaluationResult": {
+            "evaluationResultIdentifier": {
+                "evaluationResultQualifier": {
+                    "configRuleName": "s3-bucket-public-read-prohibited",
+                    "resourceType": "AWS::S3::Bucket",
+                    "resourceId": "codepipelinebucket-00000000"
+                },
+                "orderingTimestamp": "2018-12-15T11:06:51.229Z"
+            },
+            "complianceType": "COMPLIANT",
+            "resultRecordedTime": "2018-12-15T13:12:54.568Z",
+            "configRuleInvokedTime": "2018-12-15T13:12:53.615Z"
+        },
+        "notificationCreationTime": "2018-12-15T13:12:55.435Z",
+        "resourceType": "AWS::S3::Bucket"
+    }
+}

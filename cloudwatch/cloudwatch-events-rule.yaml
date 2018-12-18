@@ -1,0 +1,86 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "Event rule to monitor pipelines & config and inform a lambda function"
+
+Resources:
+
+  PipelineEventRule: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "EventRule to claim all messages for pipeline and send to lambda"
+      Name: PipelineEventRule
+      EventPattern: 
+        source: 
+          - "aws.codepipeline"
+        detail-type: 
+          - "CodePipeline Stage Execution State Change"
+      State: "ENABLED"
+      Targets: 
+        - 
+          Arn:
+            Fn::ImportValue: config-01-dev-master-lambda-sns-slack::Functionarn
+          Id: "SnsSlackV1"
+
+  ConfigEventRule: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: "EventRule to claim all messages for config and send to lambda"
+      Name: ConfigEventRule
+      EventPattern: 
+        source: 
+          - "aws.config"
+        detail-type: 
+          - "Config Rules Compliance Change"
+      State: "ENABLED"
+      Targets: 
+        - 
+          Arn:
+            Fn::ImportValue: config-01-dev-master-lambda-sns-slack::Functionarn
+          Id: "SnsSlackV2"
+
+  PermissionForPipelineEventsToInvokeLambda: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName:
+        Fn::ImportValue: config-01-dev-master-lambda-sns-slack::Functionarn
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        Fn::GetAtt: 
+          - "PipelineEventRule"
+          - "Arn"
+
+  PermissionForConfigEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName:
+        Fn::ImportValue: config-01-dev-master-lambda-sns-slack::Functionarn
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        Fn::GetAtt: 
+          - "ConfigEventRule"
+          - "Arn"
+
+Outputs:
+
+  PipelineEventRule:
+    Value: !Ref PipelineEventRule
+    Export:
+      Name: !Sub "${AWS::StackName}::PipelineEventRule"
+
+  ConfigEventRule:
+    Value: !Ref ConfigEventRule
+    Export:
+      Name: !Sub "${AWS::StackName}::ConfigEventRule"
+
+  PermissionForPipelineEventsToInvokeLambda:
+    Value: !Ref PermissionForPipelineEventsToInvokeLambda
+    Export:
+      Name: !Sub "${AWS::StackName}::PermissionForPipelineEventsToInvokeLambda"
+
+  PermissionForConfigEventsToInvokeLambda:
+    Value: !Ref PermissionForConfigEventsToInvokeLambda
+    Export:
+      Name: !Sub "${AWS::StackName}::PermissionForConfigEventsToInvokeLambda"

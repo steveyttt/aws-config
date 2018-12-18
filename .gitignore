@@ -1,0 +1,6 @@
+.zip
+node_modules/
+scrap/
+.DS_Store
+default-config-rule.yaml.zip
+code.zip

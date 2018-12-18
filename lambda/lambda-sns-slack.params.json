@@ -1,0 +1,10 @@
+[
+    {
+      "ParameterKey": "slackchannel",
+      "ParameterValue": "{slackchannel}"
+    }, 
+    {
+      "ParameterKey": "slackurl",
+      "ParameterValue": "{slackurl}"
+    }
+  ]

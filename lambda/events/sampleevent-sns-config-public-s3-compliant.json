@@ -1,0 +1,22 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:ap-southeast-2::configPOC",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "68907958-3f50-57bc-b2c9-2dd477a97516",
+                "TopicArn": "arn:aws:sns:ap-southeast-2",
+                "Subject": "[AWS Config:ap-southeast-2] AWS::Config::ResourceCompliance AWS::S3::Bucket/scraypublictest1 Upda...",
+                "Message": "hello",
+                "Timestamp": "2018-12-13T11:47:05.242Z",
+                "SignatureVersion": "1",
+                "Signature": "El7JupbW9nMtJTwcULx9zZjitD7ZlCL04UZR7ozbTqXHCKDvUZZw4R/6gdHobLZVqyKQYZRIMewkIiewzyjc8/3WrEGyJb70bs0sGvSM35KeH8YQBX6ynIFrWcDMHOX75AyOQvhwYoZI0zyJn7sfnqbTZOIXx8a1ABmFbJd2TGasdtgxRyyKSaml9d1qDKuJj2nr52EjhSMz+6J7NPtc1ePpbqRv0LHzOuRXI6m3ATTtJQXCPtSQSEQKtgXax7BVEPELo2M4iM1+NFjrSHAHXSznln7ijGqlbG6+CRVCbRpalQHhoLJbIPg6RXOQjLK5vdrNSIVK/o8SE68afvRMag==",
+                "SigningCertUrl": "https://sns.ap-southeast-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "UnsubscribeUrl": "https://sns.ap-southeast-2.amazonaws.com/?Action=Unsubsc",
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}

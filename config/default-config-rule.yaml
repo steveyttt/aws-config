@@ -1,0 +1,57 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: 'Config-Rule to monitor for all defaults'
+
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Required
+        Parameters: []
+      - Label:
+          default: Optional
+        Parameters: []
+
+Resources:
+
+  CloudtrailConfigRule:
+    Type: 'AWS::Config::ConfigRule'
+    Properties:
+      ConfigRuleName: cloudtrail-enabled
+      Description: Checks whether AWS CloudTrail is enabled in your AWS account.
+      Scope: {}
+      Source:
+        Owner: AWS
+        SourceIdentifier: CLOUD_TRAIL_ENABLED
+      MaximumExecutionFrequency: TwentyFour_Hours
+
+  MfaconfigRule:
+    Type: 'AWS::Config::ConfigRule'
+    Properties:
+      ConfigRuleName: root-account-mfa-enabled
+      Description: >-
+        Checks whether the root user of your AWS account requires multi-factor
+        authentication for console sign-in.
+      InputParameters: {}
+      Scope: {}
+      Source:
+        Owner: AWS
+        SourceIdentifier: ROOT_ACCOUNT_MFA_ENABLED
+      MaximumExecutionFrequency: TwentyFour_Hours
+
+  S3ConfigRule:
+    Type: 'AWS::Config::ConfigRule'
+    Properties:
+      ConfigRuleName: s3-bucket-public-read-prohibited
+      Description: >-
+        Checks that your S3 bucket(s) do not allow public read access. If an S3
+        bucket policy or bucket ACL allows public read access, the bucket is
+        noncompliant.
+      InputParameters: {}
+      Scope:
+        ComplianceResourceTypes:
+          - 'AWS::S3::Bucket'
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED

@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "Pipeline to deploy CloudFormation stacks"
+
+Parameters:
+
+  PipelineName:
+    Description: A name for pipeline
+    Type: String
+
+  S3Bucket:
+    Description: The name of the S3 bucket that contains the source artifact, which must be in the same region as this stack
+    Type: String
+
+  SourceS3Key:
+    Description: The file name of the source artifact, such as myfolder/myartifact.zip
+    Type: String
+
+  TemplateFileName:
+    Description: The file name of the CF template
+    Type: String
+
+  ProdStackName:
+    Description: A name for the cloudformation stack
+    Type: String
+
+  ProdStackConfig:
+    Description: The configuration file name for the production stack which code pipeline will use
+    Type: String
+    
+  ChangeSetName:
+    Description: A name for the production stack change set
+    Type: String
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "CodePipeline Settings"
+        Parameters:
+          - PipelineName
+          - S3Bucket
+          - SourceS3Key
+      - Label:
+          default: "Test Stack Settings"
+        Parameters:
+          - TemplateFileName
+      - Label:
+          default: "Production Stack Settings"
+        Parameters:
+          - ChangeSetName
+          - ProdStackName
+          - ProdStackConfig
+
+Resources:
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Location: !Ref S3Bucket
+        Type: S3
+      DisableInboundStageTransitions: []
+      Name: !Ref 'PipelineName'
+      RoleArn: !GetAtt [PipelineRole, Arn]
+      Stages:
+        - Name: S3Source
+          Actions:
+            - Name: TemplateSource
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: S3
+                Version: '1'
+              Configuration:
+                S3Bucket: !Ref 'S3Bucket'
+                S3ObjectKey: !Ref 'SourceS3Key'
+              OutputArtifacts:
+                - Name: TemplateSource
+              RunOrder: '1'
+        - Name: DeployStage
+          Actions:
+            - Name: CreateChangeSet
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: '1'
+              InputArtifacts:
+                - Name: TemplateSource
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                RoleArn: !GetAtt [CFNRole, Arn]
+                StackName: !Ref ProdStackName
+                ChangeSetName: !Ref ChangeSetName
+                TemplateConfiguration: !Sub "TemplateSource::${ProdStackConfig}"
+                TemplatePath: !Sub "TemplateSource::${TemplateFileName}"
+              RunOrder: '1'
+            - Name: ApproveChangeSet
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+              RunOrder: '2'
+            - Name: ExecuteChangeSet
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: '1'
+              Configuration:
+                ActionMode: CHANGE_SET_EXECUTE
+                ChangeSetName: !Ref ChangeSetName
+                RoleArn: !GetAtt [CFNRole, Arn]
+                StackName: !Ref ProdStackName
+              RunOrder: '3'
+
+  CFNRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: ['sts:AssumeRole']
+          Effect: Allow
+          Principal:
+            Service: [cloudformation.amazonaws.com]
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CloudFormationRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 'ec2:*'
+                  - 'config:*'
+                  - 'sqs:*'
+                  - 'sns:*'
+                  - 'lambda:*'
+                Effect: Allow
+                Resource: '*'
+              
+  PipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: ['sts:AssumeRole']
+          Effect: Allow
+          Principal:
+            Service: 
+              - codepipeline.amazonaws.com
+              - sns.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CodePipelineAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                - 's3:*'
+                - 'logs:CreateLogStream'
+                - 'logs:PutLogEvents'
+                - 'cloudformation:CreateStack'
+                - 'cloudformation:DescribeStacks'
+                - 'cloudformation:DeleteStack'
+                - 'cloudformation:UpdateStack'
+                - 'cloudformation:CreateChangeSet'
+                - 'cloudformation:ExecuteChangeSet'
+                - 'cloudformation:DeleteChangeSet'
+                - 'cloudformation:DescribeChangeSet'
+                - 'cloudformation:SetStackPolicy'
+                - 'iam:PassRole'
+                - 'sns:*'
+                Effect: Allow
+                Resource: '*'

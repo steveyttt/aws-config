@@ -1,0 +1,10 @@
+[
+    {
+      "Key": "AppName",
+      "Value": "configpoc"
+    }, 
+    {
+      "Key": "Environment",
+      "Value": "dev"
+    }
+  ]

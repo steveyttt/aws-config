@@ -1,0 +1,30 @@
+[
+    {
+      "ParameterKey": "PipelineName",
+      "ParameterValue": "defaultconfigrules"
+    }, 
+    {
+      "ParameterKey": "S3Bucket",
+      "ParameterValue": "codepipelinebucket-{accountID}"
+    },
+    {
+      "ParameterKey": "SourceS3Key",
+      "ParameterValue": "default-config-rule.yaml.zip"
+    },
+    {
+      "ParameterKey": "TemplateFileName",
+      "ParameterValue": "default-config-rule.yaml"
+    },
+    {
+      "ParameterKey": "ProdStackName",
+      "ParameterValue": "config-dev-master-default-config-rule"
+    },
+    {
+      "ParameterKey": "ProdStackConfig",
+      "ParameterValue": "default-config-rule-params.json"
+    },
+    {
+      "ParameterKey": "ChangeSetName",
+      "ParameterValue": "config-rule-default-chg-set"
+    }
+  ]

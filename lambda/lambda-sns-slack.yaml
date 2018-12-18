@@ -1,0 +1,95 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: CF to upload lambda function for sns and slack integration
+
+Parameters:
+
+  slackchannel:
+    Description: The name of the slack channel to place the message
+    Type: String
+
+  slackurl:
+    Description: The slack webhook URL cofigured for your room
+    Type: String
+
+Resources:
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      RoleName: !Sub "lambda-sns-slack-role-${AWS::AccountId}"
+
+  LambdaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub "lambda-sns-slack-policy-${AWS::AccountId}"
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - sns:Publish
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:DescribeLogStreams
+          - logs:GetLogEvents
+          - logs:PutLogEvents
+          - logs:PutRetentionPolicy
+          Resource: "*"
+      Roles: 
+      - !Ref LambdaRole
+
+  Function:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !Sub "lambdabucket-${AWS::AccountId}"
+        S3Key: "code.zip"
+      Handler: lambda-sns-slack.handler
+      Runtime: nodejs6.10
+      FunctionName: lambda-sns-slack
+      Description: Lambda function to take an SNS message and send to slack
+      Timeout: 5
+      Role: !GetAtt LambdaRole.Arn
+      Environment:
+        Variables:
+          slackchannel: !Ref slackchannel
+          slackurl: !Ref slackurl
+
+Outputs:
+
+  LambdaPolicy:
+    Value: !Ref LambdaPolicy
+    Export:
+      Name: !Sub "${AWS::StackName}::LambdaPolicy"
+
+  LambdaRole:
+    Value: !Ref LambdaRole
+    Export:
+      Name: !Sub "${AWS::StackName}::LambdaRole"
+
+  LambdaRoleArn:
+    Value: !GetAtt LambdaRole.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}::LambdaRoleArn"
+
+  Function:
+    Value: !Ref Function
+    Export:
+      Name: !Sub "${AWS::StackName}::Function"
+
+  FunctionArn:
+    Value: !GetAtt Function.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}::Functionarn"

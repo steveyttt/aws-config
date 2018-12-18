@@ -1,0 +1,40 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "S3 bucket for Code Pipeline, AWS config & Lambda"
+
+Resources:
+
+  BucketCodePipeLine:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "codepipelinebucket-${AWS::AccountId}"
+      VersioningConfiguration:
+        Status: Enabled
+
+  BucketConfig:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "configbucket-${AWS::AccountId}"
+
+  BucketLambda:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "lambdabucket-${AWS::AccountId}"
+
+Outputs:
+
+  BucketCodePipeLine:
+    Value: !Ref BucketCodePipeLine
+    Export:
+      Name: !Sub "${AWS::StackName}::BucketCodePipeLine"
+
+  BucketConfig:
+    Value: !Ref BucketConfig
+    Export:
+      Name: !Sub "${AWS::StackName}::BucketConfig"
+
+  BucketLambda:
+    Value: !Ref BucketLambda
+    Export:
+      Name: !Sub "${AWS::StackName}::BucketLambda"

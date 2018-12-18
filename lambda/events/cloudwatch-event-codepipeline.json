@@ -1,0 +1,27 @@
+{
+    "version": "0",
+    "id": "f36eba2d-8d78-ea78-c768-0096a8f7f743",
+    "detail-type": "CodePipeline Action Execution State Change",
+    "source": "aws.codepipeline",
+    "account": "00000000",
+    "time": "2018-12-15T12:44:19Z",
+    "region": "ap-southeast-2",
+    "resources": [
+        "arn:aws:codepipeline:ap-southeast-2:00000000:defaultconfigrules"
+    ],
+    "detail": {
+        "pipeline": "defaultconfigrules",
+        "execution-id": "391a54ee-7d9d-4c4a-a623-c0e5c737fe07",
+        "stage": "S3Source",
+        "action": "TemplateSource",
+        "state": "STARTED",
+        "region": "ap-southeast-2",
+        "type": {
+            "owner": "AWS",
+            "provider": "S3",
+            "category": "Source",
+            "version": "1"
+        },
+        "version": 1
+    }
+}

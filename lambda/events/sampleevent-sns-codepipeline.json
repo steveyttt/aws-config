@@ -1,0 +1,35 @@
+{
+    "Records": [
+      {
+        "EventSource": "aws:sns",
+        "EventVersion": "1.0",
+        "EventSubscriptionArn": "arn:aws:sns:us-east-1:XXX:cw-to-slack-Topic-1B8S548158492:a0e76b10-796e-471d-82d3-0510fc89ad93",
+        "Sns": {
+          "Type": "Notification",
+          "MessageId": "[...]",
+          "TopicArn": "arn:aws:sns:us-east-1:XXX:cw-to-slack-Topic-1B8S548158492",
+          "Subject": "ALARM: \"cw-to-slack-Alarm-9THDKWBS1876\" in US East (N. Virginia)",
+          "Message": {
+            "region": "ap-southeast-2",
+            "consoleLink": "https://console.aws.amazon.com/codepipeline/home?region=ap-southeast-2#/view/configrules",
+            "approval": {
+              "pipelineName": "configrules",
+              "stageName": "DeployStage",
+              "actionName": "ApproveChangeSet",
+              "token": "19346364-849e-4d81-bf20-287a98c46fd0",
+              "expires": "2018-12-17T11:52Z",
+              "externalEntityLink": null,
+              "approvalReviewLink": "https://console.aws.amazon.com/codepipeline/home?region=ap-southeast-2#/view/configrules/DeployStage/ApproveChangeSet/approve/19346364-849e-4d81-bf20-287a98c46fd0",
+              "customData": "A new change set was created for the config-dev-master-config-rule-public-s3 stack. Do you want to implement the changes?"
+            }
+          },
+          "Timestamp": "2017-10-30T13:20:35.855Z",
+          "SignatureVersion": "1",
+          "Signature": "[...]",
+          "SigningCertUrl": "[...]",
+          "UnsubscribeUrl": "[...]",
+          "MessageAttributes": {}
+        }
+      }
+    ]
+  }
