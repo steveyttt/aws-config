@@ -9,12 +9,12 @@ All CF templates are setup in their own folder. Where possible CF import functio
 Please note that all stacks in deploy.sh are deployed using the AWS CLI. However AWS Config rules are deployed using build pipeline. Pipeline rules can be quickly iterated over using the native pipeline over the CLI.
 
 ### What resources are used? ###
-**S3** is used to store config, build pipeline & lambda assets
-**SNS** is used to store the SNS notification topic for AWS Config
-**cloudwatch events** are used to created an event stream which lambda can tap into to send notifications
+**S3** is used to store config, build pipeline & lambda assets.
+**SNS** is used to store the SNS notification topic for AWS Config.
+**cloudwatch events** are used to created an event stream which lambda can tap into to send notifications.
 **Config** is used to create config rules which can scan the AWS resources for insecurities.
-**IAM** is used to create the necessary roles for AWS config
-**Lambda** is used to create a lambda function which takes event stream messages from cloudwatch and passes them to slack
+**IAM** is used to create the necessary roles for AWS config.
+**Lambda** is used to create a lambda function which takes event stream messages from cloudwatch and passes them to slack.
 
 ### How do I get set up? ###
 The deploy.sh needs running to get setup. Inputs are used heavily and the params files will need modifying to suit your account. Please search the REPO for {accountid} and replace where appropriate. If you rename a stack which is referenced in an import you will need to modify the CF to accomodate it. 
@@ -36,9 +36,10 @@ https://docs.aws.amazon.com/config/latest/developerguide/aws-config-managed-rule
 
 ### To delete and rebuild aws config ###
 https://docs.aws.amazon.com/config/latest/developerguide/stop-start-recorder.html
+
 Delete the config recorder:
-aws configservice describe-configuration-recorders
-aws configservice delete-configuration-recorder --configuration-recorder-name default
+`aws configservice describe-configuration-recorders`
+`aws configservice delete-configuration-recorder --configuration-recorder-name default`
 
 ### AWS event stream ###
 https://docs.aws.amazon.com/codepipeline/latest/userguide/detect-state-changes-cloudwatch-events.html
