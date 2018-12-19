@@ -8,6 +8,13 @@ All CF templates are setup in their own folder. Where possible CF import functio
 
 Please note that all stacks in deploy.sh are deployed using the AWS CLI. However AWS Config rules are deployed using build pipeline. Pipeline rules can be quickly iterated over using the native pipeline over the CLI.
 
+The workflow is:
+* Deploy all resources inside the deploy.sh script (Once you have updated the necessary params)
+* Deploy your rules into the account by updating the /config/default-config-rule.yaml & copying into the code pipeline S3 bucket
+* Deployment will trigger leveraging code pipeline once a file is in the bucket (See deploy.sh)
+* State changes inside AWS CONFIG and AWS CODEPIPELINE will be pushed onto the cloudwatch event bus and collected by lambda
+* Lambda function will push messages to Slack
+
 ### What resources are used? ###
 **S3** is used to store config, build pipeline & lambda assets.
 **SNS** is used to store the SNS notification topic for AWS Config.
